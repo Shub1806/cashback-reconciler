@@ -1,0 +1,14 @@
+# Core + offline demo run on the Python stdlib (3.10+). Nothing required.
+
+# Stage 1 -- email extraction (src/extract.py + src/llm.py):
+#   no package needed; configure LLM_API_URL / LLM_API_KEY / LLM_MODEL in .env
+
+# Stage 2 -- received stream (src/plaid_client.py):
+plaid-python>=20.0.0
+
+# Dev:
+pytest>=8.0.0
+
+# Optional hardening:
+# pydantic>=2.0      # validation for extracted/Plaid inputs
+# rapidfuzz>=3.0     # faster merchant matching than stdlib difflib

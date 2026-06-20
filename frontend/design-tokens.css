@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap');
+
+:root {
+  /* Brand / primary */
+  --primary: #533afd;
+  --primary-deep: #4434d4;
+  --primary-press: #2e2b8c;
+  --primary-soft: #665efd;
+  --primary-bg-subdued-hover: #b9b9f9;
+  --brand-dark-900: #1c1e54;
+
+  /* Ink (text) */
+  --ink: #0d253d;
+  --ink-secondary: #273951;
+  --ink-mute: #64748d;
+  --ink-mute-2: #61718a;
+  --on-primary: #ffffff;
+
+  /* Canvas (surfaces) */
+  --canvas: #ffffff;
+  --canvas-soft: #f6f9fc;
+  --canvas-cream: #f5e9d4;
+  --hairline: #e3e8ee;
+  --hairline-input: #a8c3de;
+
+  /* Accents — do not add colors outside these */
+  --ruby: #ea2261;
+  --magenta: #f96bee;
+  --lemon: #9b6829;
+  --shadow-blue: #003770;
+
+  /* Radius */
+  --r-xs: 4px;  --r-sm: 6px;  --r-md: 8px;
+  --r-lg: 12px; --r-xl: 16px; --r-pill: 9999px;
+
+  /* Spacing (8px base) */
+  --s-xxs: 2px; --s-xs: 4px;  --s-sm: 8px;  --s-md: 12px;
+  --s-lg: 16px; --s-xl: 24px; --s-xxl: 32px; --s-huge: 64px;
+
+  /* Elevation */
+  --shadow-1: rgba(0,55,112,0.08) 0 1px 3px;
+  --shadow-2: rgba(0,55,112,0.08) 0 8px 24px, rgba(0,55,112,0.04) 0 2px 6px;
+}
+
+/* ss01 globally; thin Inter is the brand voice */
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  font-weight: 300;
+  font-feature-settings: 'ss01';
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+/* Display tiers — always weight 300, negative tracking is the signature */
+.display-xxl { font-size: 56px; font-weight: 300; line-height: 1.03; letter-spacing: -1.4px; }
+.display-xl  { font-size: 48px; font-weight: 300; line-height: 1.15; letter-spacing: -0.96px; }
+.display-lg  { font-size: 32px; font-weight: 300; line-height: 1.1;  letter-spacing: -0.64px; }
+.display-md  { font-size: 26px; font-weight: 300; line-height: 1.12; letter-spacing: -0.26px; }
+.heading-lg  { font-size: 22px; font-weight: 300; line-height: 1.1;  letter-spacing: -0.22px; }
+.body-md     { font-size: 15px; font-weight: 300; line-height: 1.4; }
+.caption     { font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: -0.39px; }
+
+/* Money / numeric cells — tabular figures are the quiet financial signature */
+.money { font-feature-settings: 'tnum'; letter-spacing: -0.42px; }
+
+/* Buttons — always pills, never rounded-rects, never below 8px 16px padding */
+.btn-primary {
+  background: var(--primary); color: var(--on-primary);
+  font-weight: 400; font-size: 16px; line-height: 1;
+  border: none; border-radius: var(--r-pill);
+  padding: var(--s-sm) var(--s-lg); cursor: pointer;
+}
+.btn-primary:active { background: var(--primary-press); }
+.btn-secondary {
+  background: var(--canvas); color: var(--primary);
+  border: 1px solid var(--primary); border-radius: var(--r-pill);
+  padding: var(--s-sm) var(--s-lg); font-size: 16px; cursor: pointer;
+}
+
+/* Cards */
+.card {
+  background: var(--canvas); border: 1px solid var(--hairline);
+  border-radius: var(--r-lg); padding: var(--s-xxl); box-shadow: var(--shadow-1);
+}
+.card-featured { background: var(--brand-dark-900); color: var(--on-primary); }
+.card-cream { background: var(--canvas-cream); color: var(--ink); }
+
+/* Subdued indigo tag pill */
+.pill-tag {
+  background: var(--primary-bg-subdued-hover); color: var(--primary-deep);
+  font-size: 10px; font-weight: 400; letter-spacing: 0.1px; text-transform: uppercase;
+  padding: var(--s-xs) var(--s-sm); border-radius: var(--r-pill);
+}
+
+/* Inline link on light */
+.link { color: var(--primary); text-decoration: none; }
