@@ -84,6 +84,10 @@ def _seed_history(idx: ReliabilityIndex) -> None:
             idx.add(issuer, posted=(i < posted), verified=True)
 
 
+ISSUER_LABELS = {"amex": "American Express", "chase": "Chase",
+                 "citi": "Citi", "capital one": "Capital One"}
+
+
 def build_state() -> dict:
     idx = ReliabilityIndex()
     _seed_history(idx)
@@ -91,20 +95,33 @@ def build_state() -> dict:
     rows = []
     owed_total = 0.0
     owed_count = 0
+    posted_total = 0.0
+    posted_count = 0
+    in_progress = 0
+    by_issuer = {}  # issuer key -> {"tracked": int, "owed": float}
 
     for o in OFFERS:
         r = reconcile(o, TRANSACTIONS, as_of=AS_OF)
+        bi = by_issuer.setdefault(o.issuer.value, {"tracked": 0, "owed": 0.0})
+        bi["tracked"] += 1
         amount = None
+
         if r.status is ReconStatus.POSTED:
             amount = f"+${r.observed_amount:.2f}"
+            posted_total += r.observed_amount
+            posted_count += 1
             idx.add(o.issuer.value, posted=True, verified=True)
         elif r.status is ReconStatus.MISSING:
             amount = f"${r.expected_credit:.2f}"
             owed_total += r.expected_credit
             owed_count += 1
+            bi["owed"] += r.expected_credit
             idx.add(o.issuer.value, posted=False, verified=True)
         elif r.status is ReconStatus.AWAITING_CREDIT:
             amount = f"${r.expected_credit:.2f}"
+            in_progress += 1
+        else:
+            in_progress += 1
 
         rows.append({
             "merchant": o.merchant_raw,
@@ -112,23 +129,40 @@ def build_state() -> dict:
             "terms": offer_terms(o),
             "status": STATUS_LABEL[r.status],
             "amount": amount or "—",
+            "issuer": ISSUER_LABELS.get(o.issuer.value, o.issuer.value.title()),
         })
 
-    issuer_labels = {"amex": "American Express", "chase": "Chase",
-                     "citi": "Citi", "capital one": "Capital One"}
+    cards = [
+        {
+            "name": ISSUER_LABELS.get(k, k.title()),
+            "tracked": v["tracked"],
+            "owed": f"${v['owed']:.2f}",
+        }
+        for k, v in by_issuer.items()
+    ]
+
     reliability = []
     for s in idx.leaderboard(min_raw_n=1):
         key = s.key.split(":", 1)[0]
         reliability.append({
-            "issuer": issuer_labels.get(key, key.title()),
+            "issuer": ISSUER_LABELS.get(key, key.title()),
             "pct": round(s.point * 100),
             "n": s.raw_n,
         })
 
-    return {
-        "offers": rows,
+    summary = {
         "owed_total": f"${owed_total:.2f}",
         "owed_count": owed_count,
+        "posted_total": f"${posted_total:.2f}",
+        "posted_count": posted_count,
+        "in_progress": in_progress,
+        "total_offers": len(OFFERS),
+    }
+
+    return {
+        "summary": summary,
+        "offers": rows,
+        "cards": cards,
         "reliability": reliability,
     }
 
