@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tally — every credit you were promised, actually paid out</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 300; font-feature-settings: 'ss01';
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    color: #0d253d; background: #ffffff;
+  }
+  a { color: inherit; text-decoration: none; }
+  @keyframes tallyDrift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-24px) scale(1.08); } }
+  @keyframes tallyDrift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-50px,20px) scale(1.1); } }
+  @keyframes tallyDrift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,30px) scale(0.94); } }
+  .hov-pri:hover { background: #4434d4 !important; }
+  .hov-sec:hover { border-color: #533afd !important; }
+  .lnk:hover { color: #533afd !important; }
+  :focus-visible { outline: 2px solid #533afd; outline-offset: 3px; border-radius: 6px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    [style*="animation"] { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div style="position:relative; width:100%; overflow-x:hidden; background:#ffffff;">
+
+  <div style="position:absolute; top:0; left:0; right:0; height:760px; overflow:hidden; pointer-events:none; z-index:0;">
+    <div style="position:absolute; inset:0;">
+      <div style="position:absolute; top:-160px; left:-80px; width:620px; height:520px; border-radius:50%; background:radial-gradient(circle at 40% 40%, #f5e9d4 0%, rgba(245,233,212,0) 70%); filter:blur(70px); animation:tallyDrift1 18s ease-in-out infinite;"></div>
+      <div style="position:absolute; top:-120px; left:18%; width:560px; height:480px; border-radius:50%; background:radial-gradient(circle at 50% 50%, #f9b88a 0%, rgba(249,184,138,0) 68%); filter:blur(80px); animation:tallyDrift2 22s ease-in-out infinite;"></div>
+      <div style="position:absolute; top:-60px; left:40%; width:600px; height:560px; border-radius:50%; background:radial-gradient(circle at 50% 50%, #b9b9f9 0%, rgba(185,185,249,0) 70%); filter:blur(84px); animation:tallyDrift3 20s ease-in-out infinite;"></div>
+      <div style="position:absolute; top:-100px; left:58%; width:560px; height:520px; border-radius:50%; background:radial-gradient(circle at 50% 50%, #533afd 0%, rgba(83,58,253,0) 68%); filter:blur(96px); opacity:0.55; animation:tallyDrift1 24s ease-in-out infinite;"></div>
+      <div style="position:absolute; top:-150px; right:-100px; width:600px; height:540px; border-radius:50%; background:radial-gradient(circle at 50% 50%, #f96bee 0%, rgba(249,107,238,0) 66%); filter:blur(86px); opacity:0.5; animation:tallyDrift2 19s ease-in-out infinite;"></div>
+      <div style="position:absolute; top:40px; right:8%; width:440px; height:420px; border-radius:50%; background:radial-gradient(circle at 50% 50%, #ea2261 0%, rgba(234,34,97,0) 66%); filter:blur(90px); opacity:0.42; animation:tallyDrift3 26s ease-in-out infinite;"></div>
+    </div>
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.65) 70%, #ffffff 100%);"></div>
+  </div>
+
+  <div style="position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(8px); background:rgba(255,255,255,0.72); border-bottom:1px solid #e3e8ee;">
+    <div style="max-width:1180px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:9px;">
+        <div style="width:26px; height:26px; border-radius:7px; background:#533afd; display:flex; align-items:center; justify-content:center;">
+          <div style="display:flex; gap:2.5px; align-items:flex-end;">
+            <span style="display:block; width:2.5px; height:7px; background:#ffffff; border-radius:1px;"></span>
+            <span style="display:block; width:2.5px; height:11px; background:#ffffff; border-radius:1px;"></span>
+            <span style="display:block; width:2.5px; height:9px; background:#ffffff; border-radius:1px;"></span>
+          </div>
+        </div>
+        <span style="font-size:20px; font-weight:400; letter-spacing:-0.5px; color:#0d253d;">Tally</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:32px;">
+        <a href="#how" class="lnk" style="font-size:15px; color:#273951;">How it works</a>
+        <a href="#why" class="lnk" style="font-size:15px; color:#273951;">Why us</a>
+        <a href="#pricing" class="lnk" style="font-size:15px; color:#273951;">Pricing</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:18px;">
+        <a href="#" class="lnk" style="font-size:15px; color:#0d253d;">Sign in</a>
+        <a href="#" class="hov-pri" style="font-size:16px; font-weight:400; color:#ffffff; background:#533afd; padding:9px 18px; border-radius:9999px;">Start free</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:72px 24px 0; text-align:center;">
+    <div style="display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:9999px; background:rgba(255,255,255,0.7); border:1px solid #e3e8ee; backdrop-filter:blur(4px);">
+      <span style="width:6px; height:6px; border-radius:50%; background:#533afd;"></span>
+      <span style="font-size:11px; font-weight:400; letter-spacing:0.4px; text-transform:uppercase; color:#4434d4;">Trust-first cashback tracking</span>
+    </div>
+    <h1 style="margin:24px auto 0; max-width:880px; font-size:60px; font-weight:300; line-height:1.04; letter-spacing:-1.8px; color:#0d253d;">Every credit you were promised, actually paid out.</h1>
+    <p style="margin:22px auto 0; max-width:580px; font-size:18px; font-weight:300; line-height:1.5; color:#64748d;">Tally watches the card-linked offers you activate, checks whether the statement credit really posts, and tells you exactly what you're still owed.</p>
+    <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-top:30px;">
+      <a href="#" class="hov-pri" style="font-size:16px; font-weight:400; color:#ffffff; background:#533afd; padding:12px 22px; border-radius:9999px;">Connect a card</a>
+      <a href="#how" class="hov-sec" style="font-size:16px; font-weight:400; color:#533afd; background:#ffffff; border:1px solid #e3e8ee; padding:12px 22px; border-radius:9999px;">See how it works</a>
+    </div>
+    <p style="margin:16px 0 0; font-size:13px; color:#64748d; letter-spacing:-0.2px;">Read-only access · No merchant commissions · Cancel anytime</p>
+
+    <div style="position:relative; max-width:1000px; margin:56px auto 0;">
+      <div style="position:relative; background:#ffffff; border:1px solid #e3e8ee; border-radius:16px; box-shadow:rgba(0,55,112,0.10) 0 24px 60px, rgba(0,55,112,0.05) 0 6px 16px; overflow:hidden; text-align:left;">
+        <div style="display:flex; align-items:center; gap:7px; padding:13px 16px; border-bottom:1px solid #e3e8ee; background:#f6f9fc;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#e3e8ee;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#e3e8ee;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#e3e8ee;"></span>
+          <span style="margin-left:14px; font-size:12px; color:#64748d;">app.tally.com / offers</span>
+        </div>
+        <div style="display:flex; min-height:420px;">
+          <div style="width:210px; flex:none; border-right:1px solid #e3e8ee; padding:20px 14px; background:#ffffff;">
+            <div style="display:flex; align-items:center; gap:8px; padding:0 8px 18px;">
+              <div style="width:22px; height:22px; border-radius:6px; background:#533afd; display:flex; align-items:center; justify-content:center;">
+                <div style="display:flex; gap:2px; align-items:flex-end;">
+                  <span style="display:block; width:2px; height:6px; background:#fff; border-radius:1px;"></span>
+                  <span style="display:block; width:2px; height:9px; background:#fff; border-radius:1px;"></span>
+                  <span style="display:block; width:2px; height:7px; background:#fff; border-radius:1px;"></span>
+                </div>
+              </div>
+              <span style="font-size:16px; font-weight:400; letter-spacing:-0.3px;">Tally</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px; margin-bottom:2px; background:transparent;"><span style="width:7px; height:7px; border-radius:2px; background:#cbd5e1;"></span><span style="font-size:14px; color:#64748d;">Dashboard</span></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px; margin-bottom:2px; background:#eef0ff;"><span style="width:7px; height:7px; border-radius:2px; background:#533afd;"></span><span style="font-size:14px; color:#0d253d;">Offers</span></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px; margin-bottom:2px; background:transparent;"><span style="width:7px; height:7px; border-radius:2px; background:#cbd5e1;"></span><span style="font-size:14px; color:#64748d;">Cards</span></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px; margin-bottom:2px; background:transparent;"><span style="width:7px; height:7px; border-radius:2px; background:#cbd5e1;"></span><span style="font-size:14px; color:#64748d;">Reliability</span></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px; margin-bottom:2px; background:transparent;"><span style="width:7px; height:7px; border-radius:2px; background:#cbd5e1;"></span><span style="font-size:14px; color:#64748d;">Settings</span></div>
+            <div style="margin-top:22px; padding:14px 12px; border-radius:10px; background:#f6f9fc; border:1px solid #e3e8ee;">
+              <div style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#64748d;">Owed to you</div>
+              <div style="margin-top:5px; font-size:24px; font-weight:300; letter-spacing:-0.6px; color:#0d253d; font-feature-settings:'tnum';">$184.50</div>
+              <div style="margin-top:2px; font-size:12px; color:#64748d; font-feature-settings:'tnum';">across 3 missing credits</div>
+            </div>
+          </div>
+          <div style="flex:1; padding:22px 24px; background:#ffffff;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between;">
+              <h3 style="margin:0; font-size:22px; font-weight:300; letter-spacing:-0.3px;">Offers</h3>
+              <span style="font-size:13px; color:#64748d;">Last checked 6m ago</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.9fr 0.7fr; gap:12px; padding:14px 8px 10px; border-bottom:1px solid #e3e8ee;">
+              <span style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#64748d;">Merchant</span>
+              <span style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#64748d;">Offer</span>
+              <span style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#64748d;">Status</span>
+              <span style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#64748d; text-align:right;">Amount</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.9fr 0.7fr; gap:12px; align-items:center; padding:13px 8px; border-bottom:1px solid #eef2f7;">
+              <div style="display:flex; align-items:center; gap:9px;"><span style="width:24px; height:24px; border-radius:6px; background:#eef0ff; display:flex; align-items:center; justify-content:center; font-size:11px; color:#4434d4; font-weight:400;">B</span><span style="font-size:14px; color:#0d253d;">Blue Bottle</span></div>
+              <span style="font-size:14px; color:#64748d; letter-spacing:-0.2px;">Spend $25, get $5 back</span>
+              <div><span style="display:inline-block; font-size:12px; padding:3px 9px; border-radius:9999px; background:#eef0ff; color:#4434d4;">Posted</span></div>
+              <span style="font-size:14px; text-align:right; color:#0d253d; font-feature-settings:'tnum'; letter-spacing:-0.3px;">+$5.00</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.9fr 0.7fr; gap:12px; align-items:center; padding:13px 8px; border-bottom:1px solid #eef2f7;">
+              <div style="display:flex; align-items:center; gap:9px;"><span style="width:24px; height:24px; border-radius:6px; background:#fde4ec; display:flex; align-items:center; justify-content:center; font-size:11px; color:#ea2261; font-weight:400;">D</span><span style="font-size:14px; color:#0d253d;">Delta</span></div>
+              <span style="font-size:14px; color:#64748d; letter-spacing:-0.2px;">Spend $200, get $40 back</span>
+              <div><span style="display:inline-block; font-size:12px; padding:3px 9px; border-radius:9999px; background:#fde4ec; color:#ea2261;">Missing</span></div>
+              <span style="font-size:14px; text-align:right; color:#ea2261; font-feature-settings:'tnum'; letter-spacing:-0.3px;">$40.00</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.9fr 0.7fr; gap:12px; align-items:center; padding:13px 8px; border-bottom:1px solid #eef2f7;">
+              <div style="display:flex; align-items:center; gap:9px;"><span style="width:24px; height:24px; border-radius:6px; background:#f5e9d4; display:flex; align-items:center; justify-content:center; font-size:11px; color:#9b6829; font-weight:400;">W</span><span style="font-size:14px; color:#0d253d;">Whole Foods</span></div>
+              <span style="font-size:14px; color:#64748d; letter-spacing:-0.2px;">5% back through Jul 31</span>
+              <div><span style="display:inline-block; font-size:12px; padding:3px 9px; border-radius:9999px; background:#f5e9d4; color:#9b6829;">Pending</span></div>
+              <span style="font-size:14px; text-align:right; color:#9b6829; font-feature-settings:'tnum'; letter-spacing:-0.3px;">$18.50</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.9fr 0.7fr; gap:12px; align-items:center; padding:13px 8px; border-bottom:1px solid #eef2f7;">
+              <div style="display:flex; align-items:center; gap:9px;"><span style="width:24px; height:24px; border-radius:6px; background:#eef0ff; display:flex; align-items:center; justify-content:center; font-size:11px; color:#4434d4; font-weight:400;">S</span><span style="font-size:14px; color:#0d253d;">Sweetgreen</span></div>
+              <span style="font-size:14px; color:#64748d; letter-spacing:-0.2px;">Spend $40, get $8 back</span>
+              <div><span style="display:inline-block; font-size:12px; padding:3px 9px; border-radius:9999px; background:#eef0ff; color:#4434d4;">Posted</span></div>
+              <span style="font-size:14px; text-align:right; color:#0d253d; font-feature-settings:'tnum'; letter-spacing:-0.3px;">+$8.00</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1.3fr 1.7fr 0.9fr 0.7fr; gap:12px; align-items:center; padding:13px 8px;">
+              <div style="display:flex; align-items:center; gap:9px;"><span style="width:24px; height:24px; border-radius:6px; background:#fde4ec; display:flex; align-items:center; justify-content:center; font-size:11px; color:#ea2261; font-weight:400;">U</span><span style="font-size:14px; color:#0d253d;">United</span></div>
+              <span style="font-size:14px; color:#64748d; letter-spacing:-0.2px;">Spend $300, get $60 back</span>
+              <div><span style="display:inline-block; font-size:12px; padding:3px 9px; border-radius:9999px; background:#fde4ec; color:#ea2261;">Missing</span></div>
+              <span style="font-size:14px; text-align:right; color:#ea2261; font-feature-settings:'tnum'; letter-spacing:-0.3px;">$60.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="position:absolute; right:-26px; bottom:-34px; width:268px; background:#ffffff; border:1px solid #e3e8ee; border-radius:12px; box-shadow:rgba(0,55,112,0.12) 0 16px 40px, rgba(0,55,112,0.05) 0 4px 10px; padding:18px; text-align:left;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#64748d;">Reliability index</span>
+          <span style="width:6px; height:6px; border-radius:50%; background:#533afd;"></span>
+        </div>
+        <div style="margin-top:4px; font-size:13px; color:#64748d;">Who actually pays out</div>
+        <div style="margin-top:14px; display:flex; flex-direction:column; gap:13px;">
+          <div><div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;"><span style="font-size:13px; color:#0d253d;">American Express</span><span style="font-size:13px; color:#0d253d; font-feature-settings:'tnum'; letter-spacing:-0.3px;">98%</span></div><div style="height:6px; border-radius:9999px; background:#eef2f7; overflow:hidden;"><div style="height:100%; width:98%; border-radius:9999px; background:#533afd;"></div></div></div>
+          <div><div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;"><span style="font-size:13px; color:#0d253d;">Chase</span><span style="font-size:13px; color:#0d253d; font-feature-settings:'tnum'; letter-spacing:-0.3px;">94%</span></div><div style="height:6px; border-radius:9999px; background:#eef2f7; overflow:hidden;"><div style="height:100%; width:94%; border-radius:9999px; background:#533afd;"></div></div></div>
+          <div><div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;"><span style="font-size:13px; color:#0d253d;">Citi</span><span style="font-size:13px; color:#0d253d; font-feature-settings:'tnum'; letter-spacing:-0.3px;">81%</span></div><div style="height:6px; border-radius:9999px; background:#eef2f7; overflow:hidden;"><div style="height:100%; width:81%; border-radius:9999px; background:#665efd;"></div></div></div>
+          <div><div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;"><span style="font-size:13px; color:#0d253d;">Capital One</span><span style="font-size:13px; color:#0d253d; font-feature-settings:'tnum'; letter-spacing:-0.3px;">72%</span></div><div style="height:6px; border-radius:9999px; background:#eef2f7; overflow:hidden;"><div style="height:100%; width:72%; border-radius:9999px; background:#f96bee;"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="how" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:128px 24px 0;">
+    <div style="text-align:center; max-width:620px; margin:0 auto;">
+      <span style="font-size:11px; font-weight:400; letter-spacing:0.4px; text-transform:uppercase; color:#4434d4;">How it works</span>
+      <h2 style="margin:14px 0 0; font-size:40px; font-weight:300; line-height:1.1; letter-spacing:-1.1px; color:#0d253d;">Three steps, then it runs on its own.</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-top:48px;">
+      <div style="background:#ffffff; border:1px solid #e3e8ee; border-radius:12px; padding:32px;">
+        <div style="width:36px; height:36px; border-radius:9999px; border:1px solid #e3e8ee; display:flex; align-items:center; justify-content:center; font-size:15px; color:#533afd; font-feature-settings:'tnum';">1</div>
+        <h3 style="margin:22px 0 0; font-size:22px; font-weight:300; letter-spacing:-0.3px; color:#0d253d;">Connect your cards</h3>
+        <p style="margin:10px 0 0; font-size:15px; font-weight:300; line-height:1.5; color:#64748d;">Link your cards read-only in a couple of taps. We can see transactions and posted credits — never move money.</p>
+      </div>
+      <div style="background:#ffffff; border:1px solid #e3e8ee; border-radius:12px; padding:32px;">
+        <div style="width:36px; height:36px; border-radius:9999px; border:1px solid #e3e8ee; display:flex; align-items:center; justify-content:center; font-size:15px; color:#533afd; font-feature-settings:'tnum';">2</div>
+        <h3 style="margin:22px 0 0; font-size:22px; font-weight:300; letter-spacing:-0.3px; color:#0d253d;">Match promise to payout</h3>
+        <p style="margin:10px 0 0; font-size:15px; font-weight:300; line-height:1.5; color:#64748d;">Tally records every offer you activate, then watches your statements to confirm the credit it promised actually posts.</p>
+      </div>
+      <div style="background:#ffffff; border:1px solid #e3e8ee; border-radius:12px; padding:32px;">
+        <div style="width:36px; height:36px; border-radius:9999px; border:1px solid #e3e8ee; display:flex; align-items:center; justify-content:center; font-size:15px; color:#533afd; font-feature-settings:'tnum';">3</div>
+        <h3 style="margin:22px 0 0; font-size:22px; font-weight:300; letter-spacing:-0.3px; color:#0d253d;">See what you're owed</h3>
+        <p style="margin:10px 0 0; font-size:15px; font-weight:300; line-height:1.5; color:#64748d;">When a credit is late or missing, you get the merchant, the amount, and the activation date — everything you need to claim it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="why" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:128px 24px 0;">
+    <div style="background:#1c1e54; border-radius:16px; padding:72px 64px; position:relative; overflow:hidden;">
+      <div style="position:absolute; top:-120px; right:-80px; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle at 50% 50%, rgba(83,58,253,0.55) 0%, rgba(83,58,253,0) 70%); filter:blur(40px);"></div>
+      <div style="position:relative; max-width:680px;">
+        <span style="font-size:11px; font-weight:400; letter-spacing:0.4px; text-transform:uppercase; color:#b9b9f9;">Why us</span>
+        <h2 style="margin:16px 0 0; font-size:40px; font-weight:300; line-height:1.12; letter-spacing:-1.1px; color:#ffffff;">We work for you, not the merchant.</h2>
+        <p style="margin:20px 0 0; font-size:18px; font-weight:300; line-height:1.55; color:#b9b9f9; max-width:560px;">No store pays us to push their card. We don't take a cut of your cashback. You pay one flat subscription, and our only job is making sure the credits you earned actually land.</p>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:32px; margin-top:44px;">
+          <div style="border-top:1px solid rgba(255,255,255,0.16); padding-top:18px;"><div style="font-size:26px; font-weight:300; letter-spacing:-0.4px; color:#ffffff; font-feature-settings:'tnum';">$0</div><div style="margin-top:7px; font-size:14px; font-weight:300; line-height:1.45; color:#b9b9f9;">Taken from your cashback. You keep every cent you earn.</div></div>
+          <div style="border-top:1px solid rgba(255,255,255,0.16); padding-top:18px;"><div style="font-size:26px; font-weight:300; letter-spacing:-0.4px; color:#ffffff; font-feature-settings:'tnum';">0</div><div style="margin-top:7px; font-size:14px; font-weight:300; line-height:1.45; color:#b9b9f9;">Merchant commissions. No store pays us to recommend it.</div></div>
+          <div style="border-top:1px solid rgba(255,255,255,0.16); padding-top:18px;"><div style="font-size:26px; font-weight:300; letter-spacing:-0.4px; color:#ffffff; font-feature-settings:'tnum';">1</div><div style="margin-top:7px; font-size:14px; font-weight:300; line-height:1.45; color:#b9b9f9;">Flat subscription. That's the only way we make money.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pricing" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:128px 24px 0;">
+    <div style="text-align:center; max-width:620px; margin:0 auto;">
+      <span style="font-size:11px; font-weight:400; letter-spacing:0.4px; text-transform:uppercase; color:#4434d4;">Pricing</span>
+      <h2 style="margin:14px 0 0; font-size:40px; font-weight:300; line-height:1.1; letter-spacing:-1.1px; color:#0d253d;">One flat price. No cut of your cashback.</h2>
+      <div style="display:inline-flex; margin-top:26px; padding:4px; border-radius:9999px; background:#f6f9fc; border:1px solid #e3e8ee;">
+        <button id="btn-monthly" type="button" style="font-size:14px; font-weight:400; padding:8px 18px; border-radius:9999px; border:none; cursor:pointer; background:#ffffff; color:#0d253d;">Monthly</button>
+        <button id="btn-annual" type="button" style="font-size:14px; font-weight:400; padding:8px 18px; border-radius:9999px; border:none; cursor:pointer; background:transparent; color:#64748d;">Annual · save 20%</button>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-top:44px; align-items:start;">
+      <div style="background:#ffffff; border:1px solid #e3e8ee; border-radius:12px; padding:32px; display:flex; flex-direction:column;">
+        <div style="display:flex; align-items:center; gap:10px;"><h3 style="margin:0; font-size:22px; font-weight:300; letter-spacing:-0.3px; color:#0d253d;">Solo</h3></div>
+        <p style="margin:10px 0 0; font-size:14px; font-weight:300; line-height:1.45; color:#64748d;">For one person keeping a couple of cards honest.</p>
+        <div style="display:flex; align-items:baseline; gap:6px; margin:24px 0 0;"><span class="price-val" data-m="$5" data-a="$4" style="font-size:44px; font-weight:300; letter-spacing:-1.4px; color:#0d253d; font-feature-settings:'tnum';">$5</span><span style="font-size:15px; color:#64748d;">/mo</span></div>
+        <div class="billed-note" data-m="Billed monthly" data-a="Billed $48 a year" style="font-size:13px; color:#64748d; margin-top:4px; font-feature-settings:'tnum'; min-height:18px;">Billed monthly</div>
+        <a href="#" class="hov-sec" style="margin-top:24px; text-align:center; font-size:16px; font-weight:400; padding:11px 18px; border-radius:9999px; background:#ffffff; color:#533afd; border:1px solid #e3e8ee;">Start free</a>
+        <div style="height:1px; background:#e3e8ee; margin:24px 0;"></div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Up to 2 cards</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Offer + credit tracking</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Missing-credit alerts</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Issuer reliability index</span></div>
+        </div>
+      </div>
+      <div style="background:#1c1e54; border:1px solid #1c1e54; border-radius:12px; padding:32px; display:flex; flex-direction:column;">
+        <div style="display:flex; align-items:center; gap:10px;"><h3 style="margin:0; font-size:22px; font-weight:300; letter-spacing:-0.3px; color:#ffffff;">Plus</h3><span style="font-size:10px; font-weight:400; letter-spacing:0.5px; text-transform:uppercase; padding:3px 9px; border-radius:9999px; background:#533afd; color:#ffffff;">Most popular</span></div>
+        <p style="margin:10px 0 0; font-size:14px; font-weight:300; line-height:1.45; color:#b9b9f9;">For everyone juggling rewards across every card they hold.</p>
+        <div style="display:flex; align-items:baseline; gap:6px; margin:24px 0 0;"><span class="price-val" data-m="$12" data-a="$10" style="font-size:44px; font-weight:300; letter-spacing:-1.4px; color:#ffffff; font-feature-settings:'tnum';">$12</span><span style="font-size:15px; color:#b9b9f9;">/mo</span></div>
+        <div class="billed-note" data-m="Billed monthly" data-a="Billed $120 a year" style="font-size:13px; color:#b9b9f9; margin-top:4px; font-feature-settings:'tnum'; min-height:18px;">Billed monthly</div>
+        <a href="#" class="hov-pri" style="margin-top:24px; text-align:center; font-size:16px; font-weight:400; padding:11px 18px; border-radius:9999px; background:#533afd; color:#ffffff; border:1px solid #533afd;">Start free</a>
+        <div style="height:1px; background:rgba(255,255,255,0.16); margin:24px 0;"></div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#f96bee;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#e2e4f5;">Unlimited cards</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#f96bee;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#e2e4f5;">Everything in Solo</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#f96bee;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#e2e4f5;">Auto-drafted claim emails</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#f96bee;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#e2e4f5;">Priority credit checks</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#f96bee;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#e2e4f5;">Full reliability history</span></div>
+        </div>
+      </div>
+      <div style="background:#ffffff; border:1px solid #e3e8ee; border-radius:12px; padding:32px; display:flex; flex-direction:column;">
+        <div style="display:flex; align-items:center; gap:10px;"><h3 style="margin:0; font-size:22px; font-weight:300; letter-spacing:-0.3px; color:#0d253d;">Household</h3></div>
+        <p style="margin:10px 0 0; font-size:14px; font-weight:300; line-height:1.45; color:#64748d;">For families pooling cards under one roof.</p>
+        <div style="display:flex; align-items:baseline; gap:6px; margin:24px 0 0;"><span class="price-val" data-m="$20" data-a="$16" style="font-size:44px; font-weight:300; letter-spacing:-1.4px; color:#0d253d; font-feature-settings:'tnum';">$20</span><span style="font-size:15px; color:#64748d;">/mo</span></div>
+        <div class="billed-note" data-m="Billed monthly" data-a="Billed $192 a year" style="font-size:13px; color:#64748d; margin-top:4px; font-feature-settings:'tnum'; min-height:18px;">Billed monthly</div>
+        <a href="#" class="hov-sec" style="margin-top:24px; text-align:center; font-size:16px; font-weight:400; padding:11px 18px; border-radius:9999px; background:#ffffff; color:#533afd; border:1px solid #e3e8ee;">Start free</a>
+        <div style="height:1px; background:#e3e8ee; margin:24px 0;"></div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Up to 5 people</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Everything in Plus</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Shared owed-to-you view</span></div>
+          <div style="display:flex; align-items:flex-start; gap:10px;"><span style="margin-top:6px; width:5px; height:5px; border-radius:50%; flex:none; background:#533afd;"></span><span style="font-size:14px; font-weight:300; line-height:1.45; color:#273951;">Per-person breakdowns</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:128px 24px 0;">
+    <div style="background:#f5e9d4; border-radius:16px; padding:80px 64px; text-align:center; position:relative; overflow:hidden;">
+      <div style="position:relative; max-width:600px; margin:0 auto;">
+        <h2 style="margin:0; font-size:42px; font-weight:300; line-height:1.1; letter-spacing:-1.2px; color:#0d253d;">Find out what you're owed.</h2>
+        <p style="margin:18px auto 0; max-width:460px; font-size:17px; font-weight:300; line-height:1.5; color:#273951;">Connect a card read-only and Tally starts checking your activated offers within minutes.</p>
+        <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-top:30px;">
+          <a href="#" class="hov-pri" style="font-size:16px; font-weight:400; color:#ffffff; background:#533afd; padding:12px 24px; border-radius:9999px;">Connect a card</a>
+          <a href="#pricing" class="hov-sec" style="font-size:16px; font-weight:400; color:#533afd; background:#ffffff; border:1px solid rgba(13,37,61,0.12); padding:12px 24px; border-radius:9999px;">See pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:80px 24px 48px;">
+    <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:40px; padding-bottom:48px; border-bottom:1px solid #e3e8ee;">
+      <div>
+        <div style="display:flex; align-items:center; gap:9px;">
+          <div style="width:24px; height:24px; border-radius:7px; background:#533afd; display:flex; align-items:center; justify-content:center;">
+            <div style="display:flex; gap:2px; align-items:flex-end;">
+              <span style="display:block; width:2px; height:6px; background:#fff; border-radius:1px;"></span>
+              <span style="display:block; width:2px; height:10px; background:#fff; border-radius:1px;"></span>
+              <span style="display:block; width:2px; height:8px; background:#fff; border-radius:1px;"></span>
+            </div>
+          </div>
+          <span style="font-size:18px; font-weight:400; letter-spacing:-0.4px;">Tally</span>
+        </div>
+        <p style="margin:16px 0 0; font-size:13px; line-height:1.5; color:#64748d; max-width:260px;">On your side of the statement. We track the credits you're owed and tell you who pays out.</p>
+      </div>
+      <div>
+        <div style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#0d253d;">Product</div>
+        <div style="display:flex; flex-direction:column; gap:11px; margin-top:16px;">
+          <a href="#how" class="lnk" style="font-size:13px; color:#64748d;">How it works</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Reliability index</a>
+          <a href="#pricing" class="lnk" style="font-size:13px; color:#64748d;">Pricing</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Security</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#0d253d;">Company</div>
+        <div style="display:flex; flex-direction:column; gap:11px; margin-top:16px;">
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">About</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Trust charter</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Careers</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Contact</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:#0d253d;">Legal</div>
+        <div style="display:flex; flex-direction:column; gap:11px; margin-top:16px;">
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Privacy</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Terms</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Data handling</a>
+          <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Disclosures</a>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-top:24px;">
+      <span style="font-size:13px; color:#64748d; font-feature-settings:'tnum';">© 2026 Tally, Inc. All rights reserved.</span>
+      <div style="display:flex; gap:24px;">
+        <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Privacy</a>
+        <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Terms</a>
+        <a href="#" class="lnk" style="font-size:13px; color:#64748d;">Security</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var monthly = document.getElementById('btn-monthly');
+    var annual = document.getElementById('btn-annual');
+    function apply(isAnnual) {
+      document.querySelectorAll('.price-val').forEach(function (el) {
+        el.textContent = isAnnual ? el.dataset.a : el.dataset.m;
+      });
+      document.querySelectorAll('.billed-note').forEach(function (el) {
+        el.textContent = isAnnual ? el.dataset.a : el.dataset.m;
+      });
+      monthly.style.background = isAnnual ? 'transparent' : '#ffffff';
+      monthly.style.color = isAnnual ? '#64748d' : '#0d253d';
+      annual.style.background = isAnnual ? '#ffffff' : 'transparent';
+      annual.style.color = isAnnual ? '#0d253d' : '#64748d';
+    }
+    monthly.addEventListener('click', function () { apply(false); });
+    annual.addEventListener('click', function () { apply(true); });
+  })();
+</script>
+</body>
+</html>
