@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tally — dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 300; font-feature-settings: 'ss01';
+    -webkit-font-smoothing: antialiased; color: #0d253d; background: #f6f9fc;
+  }
+  .tnum { font-feature-settings: 'tnum'; letter-spacing: -0.3px; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; padding: 0 24px; background: #fff; border-bottom: 1px solid #e3e8ee;
+  }
+  .brand { display: flex; align-items: center; gap: 9px; }
+  .glyph { width: 24px; height: 24px; border-radius: 7px; background: #533afd; display: flex; align-items: center; justify-content: center; }
+  .glyph span { display: flex; gap: 2px; align-items: flex-end; }
+  .glyph i { display: block; width: 2px; background: #fff; border-radius: 1px; }
+  .layout { display: flex; min-height: calc(100vh - 60px); }
+  .side { width: 240px; flex: none; background: #fff; border-right: 1px solid #e3e8ee; padding: 20px 14px; }
+  .navi { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; margin-bottom: 2px; font-size: 14px; color: #64748d; }
+  .navi.active { background: #eef0ff; color: #0d253d; }
+  .navi .dot { width: 7px; height: 7px; border-radius: 2px; background: #cbd5e1; }
+  .navi.active .dot { background: #533afd; }
+  .owed { margin-top: 22px; padding: 16px 14px; border-radius: 10px; background: #f6f9fc; border: 1px solid #e3e8ee; }
+  .owed .lbl { font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase; color: #64748d; }
+  .owed .big { margin-top: 5px; font-size: 26px; font-weight: 300; letter-spacing: -0.6px; color: #ea2261; }
+  .owed .sub { margin-top: 2px; font-size: 12px; color: #64748d; }
+  .main { flex: 1; padding: 28px 32px; max-width: 920px; }
+  .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 12px; box-shadow: rgba(0,55,112,0.05) 0 1px 3px; }
+  h2 { margin: 0 0 4px; font-size: 26px; font-weight: 300; letter-spacing: -0.5px; }
+  .muted { font-size: 13px; color: #64748d; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase; color: #64748d; text-align: left; font-weight: 400; padding: 14px 20px; border-bottom: 1px solid #e3e8ee; }
+  th.r, td.r { text-align: right; }
+  td { font-size: 14px; color: #273951; padding: 14px 20px; border-bottom: 1px solid #eef2f7; }
+  tr:last-child td { border-bottom: none; }
+  .mrc { display: flex; align-items: center; gap: 9px; }
+  .ic { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+  .pill { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: 9999px; }
+  .rel { margin-top: 24px; padding: 22px 24px; }
+  .rel h3 { margin: 0; font-size: 16px; font-weight: 400; letter-spacing: -0.2px; }
+  .relrow { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .relrow .nm { width: 130px; font-size: 13px; }
+  .bar { flex: 1; height: 6px; border-radius: 9999px; background: #eef2f7; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 9999px; background: #533afd; }
+  .relrow .pc { width: 60px; text-align: right; font-size: 13px; }
+  .state { padding: 40px 20px; text-align: center; color: #64748d; font-size: 14px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="glyph"><span><i style="height:6px"></i><i style="height:10px"></i><i style="height:8px"></i></span></div>
+      <span style="font-size:18px; font-weight:400; letter-spacing:-0.4px;">Tally</span>
+    </div>
+    <span class="muted" id="checked">Loading…</span>
+  </div>
+
+  <div class="layout">
+    <aside class="side">
+      <div class="navi active"><span class="dot"></span>Dashboard</div>
+      <div class="navi"><span class="dot"></span>Offers</div>
+      <div class="navi"><span class="dot"></span>Cards</div>
+      <div class="navi"><span class="dot"></span>Reliability</div>
+      <div class="navi"><span class="dot"></span>Settings</div>
+      <div class="owed">
+        <div class="lbl">Owed to you</div>
+        <div class="big tnum" id="owed-total">—</div>
+        <div class="sub tnum" id="owed-sub">—</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <h2>Offers</h2>
+      <p class="muted">Reconciled against your statements by the engine.</p>
+      <div class="card" style="margin-top:18px;">
+        <table>
+          <thead>
+            <tr><th>Merchant</th><th>Offer</th><th>Status</th><th class="r">Amount</th></tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="4"><div class="state" id="loading">Loading offers…</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card rel">
+        <h3>Reliability index</h3>
+        <p class="muted" style="margin:4px 0 0;">Share of promised credits each issuer actually pays.</p>
+        <div id="rel"></div>
+      </div>
+    </main>
+  </div>
+
+<script>
+  var STATUS = {
+    Posted:   { bg: '#eef0ff', color: '#4434d4', amt: '#0d253d' },
+    Missing:  { bg: '#fde4ec', color: '#ea2261', amt: '#ea2261' },
+    Awaiting: { bg: '#eef1f5', color: '#64748d', amt: '#64748d' },
+    Pending:  { bg: '#f5e9d4', color: '#9b6829', amt: '#64748d' }
+  };
+  var ICON = {
+    Posted:   { bg: '#eef0ff', color: '#4434d4' },
+    Missing:  { bg: '#fde4ec', color: '#ea2261' },
+    Awaiting: { bg: '#eef1f5', color: '#64748d' },
+    Pending:  { bg: '#f5e9d4', color: '#9b6829' }
+  };
+
+  function esc(s){ return String(s).replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+  function render(data) {
+    document.getElementById('checked').textContent = 'Last checked just now';
+    document.getElementById('owed-total').textContent = data.owed_total;
+    document.getElementById('owed-sub').textContent = 'across ' + data.owed_count + ' missing credit' + (data.owed_count === 1 ? '' : 's');
+
+    var rows = data.offers.map(function (o) {
+      var st = STATUS[o.status] || STATUS.Pending;
+      var ic = ICON[o.status] || ICON.Pending;
+      return '<tr>' +
+        '<td><div class="mrc"><span class="ic" style="background:' + ic.bg + ';color:' + ic.color + '">' + esc(o.initial) + '</span>' + esc(o.merchant) + '</div></td>' +
+        '<td class="muted">' + esc(o.terms) + '</td>' +
+        '<td><span class="pill" style="background:' + st.bg + ';color:' + st.color + '">' + esc(o.status) + '</span></td>' +
+        '<td class="r tnum" style="color:' + st.amt + '">' + esc(o.amount) + '</td>' +
+      '</tr>';
+    }).join('');
+    document.getElementById('rows').innerHTML = rows;
+
+    var rel = data.reliability.map(function (r) {
+      return '<div class="relrow"><span class="nm">' + esc(r.issuer) + '</span>' +
+        '<span class="bar"><i style="width:' + r.pct + '%"></i></span>' +
+        '<span class="pc tnum">' + r.pct + '% <span class="muted">(' + r.n + ')</span></span></div>';
+    }).join('');
+    document.getElementById('rel').innerHTML = rel;
+  }
+
+  fetch('/api/state')
+    .then(function (res) { return res.json(); })
+    .then(render)
+    .catch(function () {
+      document.getElementById('loading').innerHTML =
+        'Could not reach the engine. Start the server first:<br><br>' +
+        '<code>pip install flask</code><br><code>python3 server.py</code><br><br>' +
+        'then open <code>http://localhost:5000</code> (not the file directly).';
+      document.getElementById('checked').textContent = 'Not connected';
+    });
+</script>
+</body>
+</html>

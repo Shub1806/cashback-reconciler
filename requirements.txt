@@ -6,6 +6,9 @@
 # Stage 2 -- received stream (src/plaid_client.py):
 plaid-python>=20.0.0
 
+# Dashboard (server.py):
+flask>=3.0.0
+
 # Dev:
 pytest>=8.0.0
 
