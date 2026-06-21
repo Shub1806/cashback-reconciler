@@ -72,6 +72,20 @@
   .note { margin-top: 14px; font-size: 13px; color: #64748d; background: #f6f9fc; border: 1px solid #e3e8ee; border-radius: 8px; padding: 10px 14px; }
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #0d253d; color: #fff; font-size: 13px; padding: 10px 18px; border-radius: 9999px; opacity: 0; transition: opacity .2s; pointer-events: none; }
   .toast.show { opacity: 1; }
+  .btn-claim { font-size: 12px; padding: 5px 12px; border-radius: 9999px; background: #533afd; color: #fff; border: none; cursor: pointer; }
+  .btn-claim:hover { background: #4434d4; }
+  .link-claim { font-size: 12px; color: #533afd; cursor: pointer; }
+  .link-claim:hover { text-decoration: underline; }
+  .modal-bg { position: fixed; inset: 0; background: rgba(13,37,61,0.45); display: none; align-items: center; justify-content: center; z-index: 50; padding: 20px; }
+  .modal-bg.show { display: flex; }
+  .modal { background: #fff; border-radius: 14px; max-width: 560px; width: 100%; max-height: 86vh; overflow: auto; box-shadow: rgba(0,55,112,0.25) 0 24px 60px; }
+  .modal-h { padding: 20px 24px; border-bottom: 1px solid #e3e8ee; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .modal-h h3 { font-size: 17px; font-weight: 400; letter-spacing: -0.3px; }
+  .modal-x { cursor: pointer; background: none; border: none; font-size: 22px; line-height: 1; color: #64748d; }
+  .modal-b { padding: 20px 24px; }
+  .claim-text { white-space: pre-wrap; font-size: 14px; line-height: 1.55; color: #273951; background: #f6f9fc; border: 1px solid #e3e8ee; border-radius: 8px; padding: 14px 16px; }
+  .claim-where { margin-top: 12px; font-size: 13px; color: #64748d; }
+  .modal-f { padding: 16px 24px 22px; display: flex; gap: 10px; }
   .state { padding: 40px 20px; text-align: center; color: #64748d; font-size: 14px; }
 </style>
 </head>
@@ -179,6 +193,19 @@
 
     </main>
   </div>
+  <div class="modal-bg" id="claim-modal">
+    <div class="modal">
+      <div class="modal-h"><h3 id="claim-title">Claim</h3><button class="modal-x" id="claim-close" aria-label="Close">&times;</button></div>
+      <div class="modal-b">
+        <div class="claim-text" id="claim-body"></div>
+        <div class="claim-where" id="claim-where"></div>
+      </div>
+      <div class="modal-f">
+        <button class="btn btn-pri" id="claim-copy">Copy message</button>
+        <button class="btn btn-ghost" id="claim-close2">Close</button>
+      </div>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
 
 <script>
@@ -220,8 +247,10 @@
     b.addEventListener('click', function () { showToast(b.dataset.stub); });
   });
 
+  var STATE = null;
   // --- render from engine data ---
   function render(d) {
+    STATE = d;
     document.getElementById('checked').textContent = 'Last checked just now';
     document.getElementById('owed-total').textContent = d.summary.owed_total;
     document.getElementById('owed-sub').textContent = 'across ' + d.summary.owed_count + ' missing credit' + (d.summary.owed_count === 1 ? '' : 's');
@@ -238,10 +267,15 @@
     }).join('');
 
     // needs attention (missing offers)
-    var missing = d.offers.filter(function (o) { return o.status === 'Missing'; });
-    document.getElementById('attention').innerHTML = missing.length
-      ? missing.map(function (o) {
-          return '<div class="row-between" style="padding:9px 0; border-bottom:1px solid #eef2f7;"><span style="font-size:14px;">' + esc(o.merchant) + '</span><span class="tnum" style="color:#ea2261;">' + esc(o.amount) + '</span></div>';
+    var attn = [];
+    d.offers.forEach(function (o, i) { if (o.status === 'Missing') attn.push({ o: o, i: i }); });
+    document.getElementById('attention').innerHTML = attn.length
+      ? attn.map(function (x) {
+          return '<div class="row-between" style="padding:9px 0; border-bottom:1px solid #eef2f7;">' +
+            '<span style="font-size:14px;">' + esc(x.o.merchant) + '</span>' +
+            '<span style="display:flex; gap:14px; align-items:center;">' +
+            '<span class="tnum" style="color:#ea2261;">' + esc(x.o.amount) + '</span>' +
+            '<span class="link-claim" data-claim="' + x.i + '">Draft claim</span></span></div>';
         }).join('')
       : '<p class="muted" style="margin-top:12px;">Nothing missing right now.</p>';
 
@@ -249,14 +283,15 @@
     document.getElementById('top-issuers').innerHTML = d.reliability.slice(0, 3).map(relRow).join('');
 
     // offers table
-    document.getElementById('rows').innerHTML = d.offers.map(function (o) {
+    document.getElementById('rows').innerHTML = d.offers.map(function (o, i) {
       var st = STATUS[o.status] || STATUS.Pending;
+      var action = o.claim ? '<div style="margin-top:6px;"><button class="btn-claim" data-claim="' + i + '">Claim</button></div>' : '';
       return '<tr>' +
         '<td><div class="mrc"><span class="ic" style="background:' + st.bg + ';color:' + st.color + '">' + esc(o.initial) + '</span>' + esc(o.merchant) + '</div></td>' +
         '<td class="muted">' + esc(o.terms) + '</td>' +
         '<td class="muted">' + esc(o.issuer) + '</td>' +
         '<td><span class="pill" style="background:' + st.bg + ';color:' + st.color + '">' + esc(o.status) + '</span></td>' +
-        '<td class="r tnum" style="color:' + st.amt + '">' + esc(o.amount) + '</td>' +
+        '<td class="r"><span class="tnum" style="color:' + st.amt + '">' + esc(o.amount) + '</span>' + action + '</td>' +
       '</tr>';
     }).join('');
 
@@ -274,6 +309,33 @@
       '<span class="bar"><i style="width:' + r.pct + '%"></i></span>' +
       '<span class="pc tnum">' + r.pct + '% <span class="muted">(' + r.n + ')</span></span></div>';
   }
+
+  // --- claim modal ---
+  var modal = document.getElementById('claim-modal');
+  function openClaim(i) {
+    var o = STATE && STATE.offers[i];
+    if (!o || !o.claim) return;
+    document.getElementById('claim-title').textContent = o.claim.subject;
+    document.getElementById('claim-body').textContent = o.claim.body;
+    document.getElementById('claim-where').textContent = o.claim.where || '';
+    modal.classList.add('show');
+  }
+  function closeClaim() { modal.classList.remove('show'); }
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-claim]');
+    if (el) openClaim(parseInt(el.dataset.claim, 10));
+  });
+  document.getElementById('claim-close').addEventListener('click', closeClaim);
+  document.getElementById('claim-close2').addEventListener('click', closeClaim);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeClaim(); });
+  document.getElementById('claim-copy').addEventListener('click', function () {
+    var text = document.getElementById('claim-body').textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function () { showToast('Message copied'); });
+    } else {
+      showToast('Copy not supported here — select the text manually');
+    }
+  });
 
   fetch('/api/state')
     .then(function (res) { return res.json(); })

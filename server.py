@@ -14,11 +14,11 @@ the real engine, not hard-coded.
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 
 from flask import Flask, jsonify, send_from_directory
 
-from src.matcher import expected_credit, find_qualifying_purchase, reconcile
+from src.matcher import CREDIT_WINDOW_DAYS, expected_credit, find_qualifying_purchase, reconcile
 from src.merchant import normalize_descriptor
 from src.models import Issuer, Offer, ReconStatus, RewardKind, Transaction, TxnKind
 from src.reliability import ReliabilityIndex
@@ -87,6 +87,54 @@ def _seed_history(idx: ReliabilityIndex) -> None:
 ISSUER_LABELS = {"amex": "American Express", "chase": "Chase",
                  "citi": "Citi", "capital one": "Capital One"}
 
+WHERE_TO_SEND = {
+    "amex": "Send via the secure message center in the Amex app, or chat with support at americanexpress.com.",
+    "chase": "Send via secure message in the Chase app (under the card's Offers), or call the number on the back of your card.",
+}
+
+
+def _find_txn(tid):
+    return next((t for t in TRANSACTIONS if t.id == tid), None)
+
+
+def build_claim(offer: Offer, r) -> dict:
+    """Draft a statement-credit claim the user can copy and send to the issuer."""
+    issuer = ISSUER_LABELS.get(offer.issuer.value, offer.issuer.value.title())
+    purchase = _find_txn(r.qualifying_txn_id)
+    amount = f"${r.expected_credit:.2f}"
+
+    lines = [
+        "Hello,",
+        "",
+        f'I activated the {offer.merchant_raw} offer on my {issuer} card '
+        f'("{offer_terms(offer)}").',
+    ]
+    if purchase:
+        pdate = purchase.posted_date.strftime("%B %d, %Y")
+        deadline = (purchase.posted_date + timedelta(days=CREDIT_WINDOW_DAYS)).strftime("%B %d, %Y")
+        lines.append(
+            f"I made a qualifying purchase of ${purchase.amount:.2f} at {offer.merchant_raw} "
+            f"on {pdate}, which met the offer terms, but the {amount} statement credit has not "
+            f"posted. It was due by {deadline}."
+        )
+    else:
+        lines.append(
+            f"I met the offer terms, but the {amount} statement credit has not posted."
+        )
+    lines += [
+        "",
+        "Could you please review this and apply the credit? I'm happy to provide any "
+        "further detail you need.",
+        "",
+        "Thank you.",
+    ]
+
+    return {
+        "subject": f"Missing statement credit - {offer.merchant_raw} offer",
+        "body": "\n".join(lines),
+        "where": WHERE_TO_SEND.get(offer.issuer.value, ""),
+    }
+
 
 def build_state() -> dict:
     idx = ReliabilityIndex()
@@ -105,6 +153,7 @@ def build_state() -> dict:
         bi = by_issuer.setdefault(o.issuer.value, {"tracked": 0, "owed": 0.0})
         bi["tracked"] += 1
         amount = None
+        claim = None
 
         if r.status is ReconStatus.POSTED:
             amount = f"+${r.observed_amount:.2f}"
@@ -116,6 +165,7 @@ def build_state() -> dict:
             owed_total += r.expected_credit
             owed_count += 1
             bi["owed"] += r.expected_credit
+            claim = build_claim(o, r)
             idx.add(o.issuer.value, posted=False, verified=True)
         elif r.status is ReconStatus.AWAITING_CREDIT:
             amount = f"${r.expected_credit:.2f}"
@@ -130,6 +180,7 @@ def build_state() -> dict:
             "status": STATUS_LABEL[r.status],
             "amount": amount or "—",
             "issuer": ISSUER_LABELS.get(o.issuer.value, o.issuer.value.title()),
+            "claim": claim,
         })
 
     cards = [
